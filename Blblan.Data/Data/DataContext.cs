@@ -11,13 +11,13 @@ public class DataContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
     }
 
-    public DbSet<Conversation> Conversations { get; set; }
+    public DbSet<Context> Conversations { get; set; }
 
     public DbSet<Subscription> Subscriptions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Conversation>()
+        modelBuilder.Entity<Context>()
             .HasQueryFilter(x => x.IsDeleted);
 
         modelBuilder.Entity<Subscription>()
@@ -28,8 +28,7 @@ public class DataContext : IdentityDbContext<User, IdentityRole<int>, int>
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var connection =
-            "server=localhost;Port=3309;database=SoftwareEngineerDb;user=root;password=sqlpass1234;old guids=true;";
+        var connection = "server=localhost;Port=3309;database=SoftwareEngineerDb;user=root;password=sqlpass1234;old guids=true;";
 
         optionsBuilder.UseMySql(connection, ServerVersion.AutoDetect(connection));
     }
