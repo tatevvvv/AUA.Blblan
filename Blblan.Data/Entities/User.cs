@@ -12,7 +12,7 @@ public class User : IdentityUser<int>
     
     public string FullName { get; set; }
 
-    public ICollection<Context> Conversations { get; set; }
+    public ICollection<Conversation> Conversations { get; set; }
     
-    public ICollection<Subscription> Subscriptions { get; set; }
+    public ICollection<Message> Subscriptions { get; set; }
 }

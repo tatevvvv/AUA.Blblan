@@ -1,5 +1,4 @@
-using Blblan.Data;
-using Microsoft.EntityFrameworkCore;
+using Blblan.BusinessLayer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,10 +10,7 @@ var Configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.development.json", optional: true, reloadOnChange: true)
     .Build();
 
-services.AddDbContext<DataContext>(options =>
-    options.UseMySql(Configuration.GetConnectionString("DefaultConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
-
+builder.Services.RegisterDataLayer(builder.Configuration);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

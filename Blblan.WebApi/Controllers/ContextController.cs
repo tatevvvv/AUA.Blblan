@@ -8,21 +8,31 @@ namespace Blblan.WebApi.Controllers
     [ApiController]
     public class ContextController : ControllerBase
     {
-        private readonly IContextService _contextService;
+        private readonly IConversationService _contextService;
 
-        public ContextController(IContextService contextService)
+        public ContextController(IConversationService contextService)
         {
             _contextService = contextService;
         }
 
         [HttpPost]
-        public IActionResult SendMessage([FromBody] QuestionDto questionDto)
+        public async Task<IActionResult> SendMessage(int userId, [FromBody] QuestionDto questionDto)
         {
-            // perform validation
+            // TODO: perform validation
+            // TODO: add auto mappers
+            var answer = await _contextService.SendMessageAsync(userId, new QuestionModel(questionDto.content, questionDto.contextId)).ConfigureAwait(false);
 
-            var answer =  _contextService.SendMessage(new QuestionModel(questionDto.content, questionDto.contextId));
+            return Ok(answer);
+        }
 
-            return Ok(new AnswerDto("Sorry, we are not trained yet", 0));
+        [HttpPost]
+        public async Task<IActionResult> CratetNewConversation(int userId)
+        {
+            // TODO: perform validation
+            // TODO: add auto mappers
+            var result = await _contextService.CreateNewConversation(userId);
+
+            return Ok(result);
         }
     }
 }

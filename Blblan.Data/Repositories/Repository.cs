@@ -1,14 +1,13 @@
 using Blblan.Common.Models;
 using Microsoft.EntityFrameworkCore;
-using Blblan.Data;
 
 namespace Blblan.Data.Repositories;
 
 public class Repository<T> : IRepository<T> where T : class
 {
-    private readonly DataContext _context;
+    private readonly BlblanDbContext _context;
 
-    public Repository(DataContext context)
+    public Repository(BlblanDbContext context)
     {
         _context = context;
     }
