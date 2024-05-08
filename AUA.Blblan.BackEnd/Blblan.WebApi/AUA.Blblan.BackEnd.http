@@ -1,0 +1,6 @@
+@AUA.Blblan.BackEnd_HostAddress = http://localhost:5198
+
+GET {{AUA.Blblan.BackEnd_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
