@@ -80,5 +80,10 @@ namespace Blblan.BusinessLayer
 
             return new ConversationModel(conversation.Id, conversation.Name);
         }
+
+        public async Task GetModelName()
+        {
+            await _predictionEngineClient.GetModelName().ConfigureAwait(false);
+        }
     }
 }

@@ -7,5 +7,7 @@ namespace Blblan.Common.Services
         Task<AnswerModel> SendMessageAsync(int userId, QuestionModel messageModel);
 
         Task<ConversationModel> CreateNewConversation(int userId);
+
+        Task GetModelName();
     }
 }

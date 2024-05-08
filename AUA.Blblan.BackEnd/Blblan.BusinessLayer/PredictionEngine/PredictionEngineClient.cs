@@ -8,7 +8,7 @@ namespace PredictionClientApp
     {
         private readonly HttpClient _httpClient;
 
-        private readonly string baseUrl = "";
+        private readonly string baseUrl = "http://localhost:1234/v1";
 
         public PredictionEngineClient()
         {
@@ -40,6 +40,22 @@ namespace PredictionClientApp
                 // Handle exceptions related to the request
                 Console.WriteLine($"Error making prediction: {e.Message}");
                 return null;
+            }
+        }
+
+        public async Task GetModelName()
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.GetAsync("/models");
+
+                // Ensure the request was successful
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException e)
+            {
+                // Handle exceptions related to the request
+                Console.WriteLine($"Error making prediction: {e.Message}");
             }
         }
 

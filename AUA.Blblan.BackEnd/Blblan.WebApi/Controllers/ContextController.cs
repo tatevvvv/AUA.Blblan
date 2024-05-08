@@ -34,5 +34,15 @@ namespace Blblan.WebApi.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetModelName()
+        {
+            // TODO: perform validation
+            // TODO: add auto mappers
+            await _contextService.GetModelName().ConfigureAwait(false);
+
+            return Ok();
+        }
     }
 }

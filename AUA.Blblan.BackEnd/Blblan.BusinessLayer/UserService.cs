@@ -5,12 +5,12 @@ namespace Blblan.BusinessLayer
 {
     internal class UserService : IUserService
     {
-        public Task<User> AuthenticateAsync(string username, string password)
+        public Task<User> AuthenticateAsync(LoginModel loginModel)
         {
             throw new NotImplementedException();
         }
 
-        public Task<User> RegisterAsync(string username, string password)
+        public Task<User> RegisterAsync(SignUpModel signUpModel)
         {
             throw new NotImplementedException();
         }

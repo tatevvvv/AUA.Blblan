@@ -7,17 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="PredictionEngine\Requests\**" />
+    <Compile Remove="PredictionEngine\Responses\**" />
+    <EmbeddedResource Remove="PredictionEngine\Requests\**" />
+    <EmbeddedResource Remove="PredictionEngine\Responses\**" />
+    <None Remove="PredictionEngine\Requests\**" />
+    <None Remove="PredictionEngine\Responses\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Blblan.Common\Blblan.Common.csproj" />
     <ProjectReference Include="..\Blblan.Data\Blblan.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="PredictionEngine\Responses\" />
-    <Folder Include="PredictionEngine\Requests\" />
   </ItemGroup>
 
 </Project>
