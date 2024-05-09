@@ -4,8 +4,8 @@ namespace Blblan.Common.Services
 {
     public interface IUserService
     {
-        Task<User> AuthenticateAsync(LoginModel loginModel);
+        Task<UserModel> AuthenticateAsync(LoginModel loginModel);
 
-        Task<User> RegisterAsync(SignUpModel signUpModel);
+        Task<UserModel> RegisterAsync(SignUpModel signUpModel);
     }
 }

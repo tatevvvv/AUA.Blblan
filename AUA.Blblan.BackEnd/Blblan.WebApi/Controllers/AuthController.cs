@@ -1,5 +1,6 @@
 ﻿using Blblan.Common.Models;
 using Blblan.Common.Services;
+using Blblan.WebApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blblan.WebApi.Controllers
@@ -9,10 +10,13 @@ namespace Blblan.WebApi.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly TokenService _tokenService;
 
-        public AuthController(IUserService userService)
+        public AuthController(IUserService userService, TokenService tokenService)
         {
             _userService = userService;
+            _tokenService = tokenService;
+
         }
 
         [HttpPost("login")]
@@ -21,8 +25,11 @@ namespace Blblan.WebApi.Controllers
             var user = await _userService.AuthenticateAsync(model);
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
-
-            return Ok(new { Token = user.token });
+            
+            var accessToken = _tokenService.CreateToken(user);
+            return Ok(new UserResponse{
+                Token = accessToken
+            });
         }
 
         [HttpPost("register")]
