@@ -1,4 +1,5 @@
-﻿using Blblan.Common.Models;
+﻿using Blblan.BusinessLayer.Requests;
+using Blblan.Common.Models;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -24,10 +25,21 @@ namespace PredictionClientApp
         {
             try
             {
-                string jsonContent = JsonConvert.SerializeObject(model);
+                var requestModel = new RequestBody
+                {
+                    Messages = new List<Message>
+                    {
+                        new Message
+                        {
+                            Content = "Hello",
+                        }
+                    }
+                };
+
+                string jsonContent = JsonConvert.SerializeObject(requestModel);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await _httpClient.PostAsync("/predict", content);
+                HttpResponseMessage response = await _httpClient.PostAsync("/chat/completions", content);
 
                 // Ensure the request was successful
                 response.EnsureSuccessStatusCode();

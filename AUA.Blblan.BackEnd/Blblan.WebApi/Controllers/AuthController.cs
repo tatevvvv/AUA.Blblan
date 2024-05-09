@@ -22,12 +22,21 @@ namespace Blblan.WebApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            var user = await _userService.AuthenticateAsync(model);
-            if (user == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
-            
+            UserModel? user = null;
+            try
+            {
+                user = await _userService.AuthenticateAsync(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
             var accessToken = _tokenService.CreateToken(user);
-            return Ok(new UserResponse{
+
+            return Ok(new UserResponse
+            {
+                Id = user.Id,
                 Token = accessToken
             });
         }
@@ -35,9 +44,16 @@ namespace Blblan.WebApi.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(SignUpModel model)
         {
-            var user = await _userService.RegisterAsync(model);
-            if (user == null)
-                return BadRequest(new { message = "User already exists" });
+            UserModel user;
+
+            try
+            {
+                user = await _userService.RegisterAsync(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
             return Ok(user);
         }
