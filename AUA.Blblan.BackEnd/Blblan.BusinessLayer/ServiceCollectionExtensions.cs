@@ -1,6 +1,8 @@
 ﻿using Blblan.Common.Services;
 using Blblan.Data;
+using Blblan.Data.Entities;
 using Blblan.Data.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +21,7 @@ namespace Blblan.BusinessLayer
             services.AddScoped<MessagesRepository>();
             services.AddScoped<ConversationRepository>();
             services.AddScoped<UserRepository>();
+
             return services;
         }
         

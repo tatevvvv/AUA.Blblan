@@ -2,6 +2,8 @@ using Blblan.BusinessLayer;
 using Blblan.Common.Models;
 using Blblan.Common.Services;
 using Blblan.Data;
+using Blblan.Data.Entities;
+using Blblan.WebApi;
 using Blblan.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -32,8 +34,10 @@ services.AddCors(options =>
 
 builder.Services.AddScoped<TokenService, TokenService>();
 
+services.Configure<JwtTokenSettings>(builder.Configuration.GetSection("JwtTokenSettings"));
+
 builder.Services
-    .AddIdentity<UserModel, IdentityRole>(options =>
+    .AddIdentity<User, IdentityRole<int>>(options =>
     {
         options.SignIn.RequireConfirmedAccount = false;
         options.User.RequireUniqueEmail = true;
@@ -42,7 +46,7 @@ builder.Services
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequireUppercase = false;
     })
-    .AddRoles<IdentityRole>()
+    .AddRoles<IdentityRole<int>>()
     .AddEntityFrameworkStores<BlblanDbContext>();
 
 var validIssuer = builder.Configuration.GetValue<string>("JwtTokenSettings:ValidIssuer");

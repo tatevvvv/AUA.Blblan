@@ -44,5 +44,15 @@ namespace Blblan.WebApi.Controllers
 
             return Ok();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllConversations(int userId)
+        {
+            // TODO: perform validation
+            // TODO: add auto mappers
+            var result  = await _contextService.GetConversationListAsync(userId).ConfigureAwait(false);
+
+            return Ok(result);
+        }
     }
 }

@@ -39,7 +39,7 @@ namespace Blblan.WebApi.Controllers
             if (user == null)
                 return BadRequest(new { message = "User already exists" });
 
-            return Ok(new { message = "Registration successful" });
+            return Ok(user);
         }
     }
 

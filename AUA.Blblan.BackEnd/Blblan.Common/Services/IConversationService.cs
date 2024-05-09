@@ -9,5 +9,7 @@ namespace Blblan.Common.Services
         Task<ConversationModel> CreateNewConversation(int userId);
 
         Task GetModelName();
+
+        Task<List<ConversationModel>> GetConversationListAsync(int userId);
     }
 }

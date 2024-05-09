@@ -1,21 +1,22 @@
-using Microsoft.AspNetCore.Http.HttpResults;
-
 namespace Blblan.WebApi.Services;
 
-using System.IdentityModel.Tokens.Jwt;
+using Blblan.Common.Models;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Blblan.Common.Models;
 
 public class TokenService
 {
     private const int ExpirationMinutes = 60;
     private readonly ILogger<TokenService> _logger;
+    private readonly JwtTokenSettings _options;
 
-    public TokenService(ILogger<TokenService> logger)
+    public TokenService(ILogger<TokenService> logger, IOptions<JwtTokenSettings> options)
     {
         _logger = logger;
+        _options = options.Value;
     }
 
     public string CreateToken(UserModel user)
@@ -27,17 +28,17 @@ public class TokenService
             expiration
         );
         var tokenHandler = new JwtSecurityTokenHandler();
-        
+
         _logger.LogInformation("JWT Token created");
-        
+
         return tokenHandler.WriteToken(token);
     }
 
     private JwtSecurityToken CreateJwtToken(List<Claim> claims, SigningCredentials credentials,
         DateTime expiration) =>
         new(
-            new ConfigurationBuilder().AddJsonFile("appsettings.Development.json").Build().GetSection("JwtTokenSettings")["ValidIssuer"],
-            new ConfigurationBuilder().AddJsonFile("appsettings.Development.json").Build().GetSection("JwtTokenSettings")["ValidAudience"],
+            _options.ValidIssuer,
+            _options.ValidAudience,
             claims,
             expires: expiration,
             signingCredentials: credentials
@@ -45,8 +46,8 @@ public class TokenService
 
     private List<Claim> CreateClaims(UserModel user)
     {
-        var jwtSub = new ConfigurationBuilder().AddJsonFile("appsettings.Development.json").Build().GetSection("JwtTokenSettings")["JwtRegisteredClaimNamesSub"];
-        
+        var jwtSub = _options.JwtRegisteredClaimNamesSub;
+
         try
         {
             var claims = new List<Claim>
@@ -59,7 +60,7 @@ public class TokenService
                 // new Claim(ClaimTypes.Name, user.UserName),
                 // new Claim(ClaimTypes.Role, user.Role.ToString())
             };
-            
+
             return claims;
         }
         catch (Exception e)
@@ -71,8 +72,8 @@ public class TokenService
 
     private SigningCredentials CreateSigningCredentials()
     {
-        var symmetricSecurityKey = new ConfigurationBuilder().AddJsonFile("appsettings.Developmnet.json").Build().GetSection("JwtTokenSettings")["SymmetricSecurityKey"];
-        
+        var symmetricSecurityKey = _options.SymmetricSecurityKey;
+
         return new SigningCredentials(
             new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(symmetricSecurityKey)

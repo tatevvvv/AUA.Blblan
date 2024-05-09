@@ -10,72 +10,70 @@ namespace Blblan.BusinessLayer
 {
     internal class UserService : IUserService
     {
-        private readonly UserRepository _userRepository;
+        private readonly UserManager<User> _userManager;
 
-        public UserService(UserRepository userRepository)
+        public UserService(UserManager<User> userManager)
         {
-            _userRepository = userRepository;
+            _userManager = userManager;
         }
 
         public async Task<UserModel> AuthenticateAsync(LoginModel loginModel)
         {
-            // var user = await _userRepository.FindByUsernameAsync(loginModel.UserName);
-            // if (user == null)
-            // {
-            //     // User not found, return null or throw an exception
-            //     return null;
-            // }
+            var user = await _userManager.FindByNameAsync(loginModel.UserName);
+            if (user == null)
+            {
+                // User not found, return null or throw an exception
+                return null;
+            }
 
-            // var isPasswordValid = await _userManager.CheckPasswordAsync(user, loginModel.Password);
-            // if (!isPasswordValid)
-            // {
-            //     // Incorrect password, return null or throw an exception
-            //     return null;
-            // }
+            var isPasswordValid = await _userManager.CheckPasswordAsync(user, loginModel.Password);
+            if (!isPasswordValid)
+            {
+                // Incorrect password, return null or throw an exception
+                return null;
+            }
 
-            // var userRes = new UserModel{
-            //     Id = user.Id,
-            //     Email = user.Email
-            // };
+            var userRes = new UserModel
+            {
+                Id = user.Id,
+                Email = user.Email
+            };
 
-            
-            // return userRes;
-            throw new NotImplementedException();
 
+            return userRes;
         }
 
         public async Task<UserModel> RegisterAsync(SignUpModel signUpModel)
         {
-            // var existingUser = await _userRepository.FindByEmailAsync(signUpModel.Email);
+            var existingUser = await _userManager.FindByEmailAsync(signUpModel.Email);
 
-            // if (existingUser != null)
-            // {
-            //     return null;
-            // }
+            if (existingUser != null)
+            {
+                throw new InvalidOperationException("User with email already exists"); // todo fix
+            }
 
-            // var newUser = new User
-            // {
-            //     UserName = signUpModel.UserName,
-            //     Email = signUpModel.Email,
-            //     //TODO: password
-            // };
+            var newUser = new User
+            {
+                UserName = signUpModel.UserName,
+                FullName = signUpModel.UserName,
+                Email = signUpModel.Email,
+            };
 
-            // var result = await _userRepository.AddAsync(newUser);
+            var result = await _userManager.CreateAsync(newUser, signUpModel.Password);
 
-            // if (!result.Succeeded)
-            // {
-            //     // Handle errors occurred during user creation
-            //     throw new Exception("Failed to register user.");
-            // }
+            if (!result.Succeeded)
+            {
+                // Handle errors occurred during user creation
+                throw new Exception("Failed to register user.");
+            }
 
-            // var userRes = new UserModel{
-            //     Id = newUser.Id,
-            //     Email = newUser.Email
-            // };
+            var userRes = new UserModel
+            {
+                Id = newUser.Id,
+                Email = newUser.Email
+            };
 
-            // return userRes;
-            throw new NotImplementedException();
-
+            return userRes;
         }
     }
 }

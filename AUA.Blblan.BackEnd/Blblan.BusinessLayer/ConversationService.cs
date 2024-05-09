@@ -2,6 +2,7 @@
 using Blblan.Common.Services;
 using Blblan.Data.Entities;
 using Blblan.Data.Repositories;
+using Microsoft.EntityFrameworkCore;
 using PredictionClientApp;
 
 namespace Blblan.BusinessLayer
@@ -84,6 +85,14 @@ namespace Blblan.BusinessLayer
         public async Task GetModelName()
         {
             await _predictionEngineClient.GetModelName().ConfigureAwait(false);
+        }
+
+        public async Task<List<ConversationModel>> GetConversationListAsync(int userId)
+        {
+            var convs = _conversationRepository.AsNoTracking().Where(c => c.UserId == userId);
+            var userconv = await convs.Where(c => c.UserId == userId).ToListAsync().ConfigureAwait(false);
+
+            return userconv.Select(c => new ConversationModel(c.Id, c.Name)).ToList();
         }
     }
 }
