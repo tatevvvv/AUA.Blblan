@@ -18,8 +18,6 @@ namespace Blblan.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> SendMessage(int userId, [FromBody] QuestionDto questionDto)
         {
-            // TODO: perform validation
-            // TODO: add auto mappers
             var answer = await _contextService.SendMessageAsync(userId, new QuestionModel(questionDto.content, questionDto.contextId)).ConfigureAwait(false);
 
             return Ok(answer);
@@ -28,8 +26,6 @@ namespace Blblan.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CratetNewConversation(int userId)
         {
-            // TODO: perform validation
-            // TODO: add auto mappers
             var result = await _contextService.CreateNewConversation(userId);
 
             return Ok(result);
@@ -38,8 +34,6 @@ namespace Blblan.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetModelName()
         {
-            // TODO: perform validation
-            // TODO: add auto mappers
             await _contextService.GetModelName().ConfigureAwait(false);
 
             return Ok();
@@ -48,8 +42,6 @@ namespace Blblan.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllConversations(int userId)
         {
-            // TODO: perform validation
-            // TODO: add auto mappers
             var result  = await _contextService.GetConversationListAsync(userId).ConfigureAwait(false);
 
             return Ok(result);

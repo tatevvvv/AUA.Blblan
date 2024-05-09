@@ -1,9 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using Blblan.Common.Models;
+﻿using Blblan.Common.Models;
 using Blblan.Common.Services;
 using Blblan.Data.Entities;
-using Blblan.Data.Repositories;
 using Microsoft.AspNetCore.Identity;
 
 namespace Blblan.BusinessLayer
@@ -23,14 +20,14 @@ namespace Blblan.BusinessLayer
             if (user == null)
             {
                 // User not found, return null or throw an exception
-                return null;
+                throw new InvalidOperationException("User not found");
             }
 
             var isPasswordValid = await _userManager.CheckPasswordAsync(user, loginModel.Password);
             if (!isPasswordValid)
             {
                 // Incorrect password, return null or throw an exception
-                return null;
+                throw new InvalidOperationException("Incorrect Password");
             }
 
             var userRes = new UserModel
@@ -49,7 +46,7 @@ namespace Blblan.BusinessLayer
 
             if (existingUser != null)
             {
-                throw new InvalidOperationException("User with email already exists"); // todo fix
+                throw new InvalidOperationException("User with email already exists");
             }
 
             var newUser = new User
@@ -64,7 +61,7 @@ namespace Blblan.BusinessLayer
             if (!result.Succeeded)
             {
                 // Handle errors occurred during user creation
-                throw new Exception("Failed to register user.");
+                throw new InvalidOperationException("Failed to register user");
             }
 
             var userRes = new UserModel
