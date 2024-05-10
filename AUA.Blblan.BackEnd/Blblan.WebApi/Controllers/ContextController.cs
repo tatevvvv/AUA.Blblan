@@ -30,19 +30,11 @@ namespace Blblan.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CratetNewConversation(int userId)
+        public async Task<IActionResult> CrateNewConversation(int userId)
         {
             var result = await _contextService.CreateNewConversation(userId);
 
             return Ok(result);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetModelName()
-        {
-            await _contextService.GetModelName().ConfigureAwait(false);
-
-            return Ok();
         }
 
         [HttpGet]

@@ -18,7 +18,7 @@ namespace PredictionClientApp
             {
                 BaseAddress = new Uri(baseUrl)
             };
-            // Optionally set up headers or other settings
+            
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
 
@@ -35,43 +35,20 @@ namespace PredictionClientApp
 
                 string jsonContent = JsonConvert.SerializeObject(requestModel);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
                 HttpResponseMessage response = await _httpClient.PostAsync("/process_message", content);
 
-                // Ensure the request was successful
                 response.EnsureSuccessStatusCode();
-
-                // Read the response content
                 var result = await response.Content.ReadAsStringAsync();
                 
                 return (response.StatusCode, result);
             }
             catch (HttpRequestException e)
             {
-                // Handle exceptions related to the request
                 Console.WriteLine($"Error making prediction: {e.Message}");
-
                 return new ValueTuple<HttpStatusCode, string>();
             }
         }
 
-        public async Task GetModelName()
-        {
-            try
-            {
-                HttpResponseMessage response = await _httpClient.GetAsync("/models");
-
-                // Ensure the request was successful
-                response.EnsureSuccessStatusCode();
-            }
-            catch (HttpRequestException e)
-            {
-                // Handle exceptions related to the request
-                Console.WriteLine($"Error making prediction: {e.Message}");
-            }
-        }
-
-        // Implement IDisposable to dispose of the HttpClient
         public void Dispose()
         {
             _httpClient?.Dispose();

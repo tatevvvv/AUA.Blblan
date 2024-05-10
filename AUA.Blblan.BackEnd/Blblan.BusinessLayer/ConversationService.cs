@@ -108,11 +108,6 @@ namespace Blblan.BusinessLayer
             return new ConversationModel(conversation.Id, conversation.Name);
         }
 
-        public async Task GetModelName()
-        {
-            await _predictionEngineClient.GetModelName().ConfigureAwait(false);
-        }
-
         public async Task<List<ConversationModel>> GetConversationListAsync(int userId)
         {
             var convs = _conversationRepository.AsNoTracking().Where(c => c.UserId == userId);
