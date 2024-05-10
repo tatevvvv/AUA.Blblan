@@ -101,10 +101,10 @@ namespace Blblan.BusinessLayer
             {
                 UserId = userId,
                 CreatedAt = DateTime.UtcNow,
+                Name = $"Conversation_{DateTime.UtcNow}"
             };
 
             await _conversationRepository.AddAsync(conversation).ConfigureAwait(false);
-
             return new ConversationModel(conversation.Id, conversation.Name);
         }
 

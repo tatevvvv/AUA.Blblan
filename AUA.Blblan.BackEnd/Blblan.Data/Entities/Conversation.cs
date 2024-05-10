@@ -9,7 +9,7 @@ public sealed class Conversation
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    public string Name { get; set; } = "Unknown Conversation";
+    public string Name { get; set; }
 
     public int UserId { get; set; }
 
