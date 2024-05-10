@@ -9,7 +9,7 @@ namespace PredictionClientApp
     {
         private readonly HttpClient _httpClient;
 
-        private readonly string baseUrl = "http://localhost:1234/v1";
+        private readonly string baseUrl = "http://localhost:8000";
 
         public PredictionEngineClient()
         {
@@ -27,19 +27,15 @@ namespace PredictionClientApp
             {
                 var requestModel = new RequestBody
                 {
-                    Messages = new List<Message>
-                    {
-                        new Message
-                        {
-                            Content = "Hello",
-                        }
-                    }
+                    userID = 1,
+                    conversationID = model.contextId,
+                    messageText = model.content
                 };
 
                 string jsonContent = JsonConvert.SerializeObject(requestModel);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await _httpClient.PostAsync("/chat/completions", content);
+                HttpResponseMessage response = await _httpClient.PostAsync("/process_message", content);
 
                 // Ensure the request was successful
                 response.EnsureSuccessStatusCode();

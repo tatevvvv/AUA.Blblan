@@ -2,9 +2,8 @@
 {
     public class RequestBody
     {
-        public List<Message> Messages { get; set; }
-        public double Temperature { get; set; } = 0.7;
-        public int MaxTokens { get; set; } = 10;
-        public bool Stream { get; set; }
+        public int userID { get; set; }
+        public int conversationID { get; set; }
+        public string messageText { get; set; }
     }
 }

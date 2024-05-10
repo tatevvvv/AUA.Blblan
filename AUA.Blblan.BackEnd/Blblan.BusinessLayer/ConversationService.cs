@@ -45,16 +45,22 @@ namespace Blblan.BusinessLayer
 
                 // after getting the response from prediction engine store it in db.
 
-                conversation.Messages.Add(new Message
+                if (result != null)
                 {
-                    Question = messageModel.content,
-                    Answer = response,
-                    ConversationId = messageModel.contextId,
-                    Conversation = conversation,
-                    Timestamp = DateTime.UtcNow,
-                });
+                    conversation.Messages ??= new List<Message>();
+                    conversation.Messages.Add(new Message
+                    {
+                        Question = messageModel.content,
+                        Answer = response,
+                        ConversationId = messageModel.contextId,
+                        Conversation = conversation,
+                        Timestamp = DateTime.UtcNow,
+                    });
 
-                return result;
+                    return result;
+                }
+
+                return null;
             }
             catch (Exception e)
             {
