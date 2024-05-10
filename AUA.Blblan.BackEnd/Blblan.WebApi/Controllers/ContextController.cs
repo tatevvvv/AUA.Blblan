@@ -23,6 +23,12 @@ namespace Blblan.WebApi.Controllers
             return Ok(answer);
         }
 
+        [HttpGet]
+        public async Task<List<MessageModel>> GetConversationAllMessagesByUserId(int userId, int conversationId)
+        {
+            return await _contextService.GetAllConversationByUserId(userId, conversationId);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CratetNewConversation(int userId)
         {

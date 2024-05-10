@@ -50,7 +50,8 @@ namespace Blblan.BusinessLayer
                         Answer = result.response,
                         ConversationId = messageModel.contextId,
                         Timestamp = DateTime.UtcNow,
-                        Conversation = conversation
+                        Conversation = conversation,
+                        UserId = userId
                     }).ConfigureAwait(false);
                     
                     return resultModel;
@@ -65,6 +66,27 @@ namespace Blblan.BusinessLayer
                 return new AnswerModel(e.Message, messageModel.contextId);
             }
         }
+
+        public async Task<List<MessageModel>> GetAllConversationByUserId(int userId, int conversationId)
+        {
+            List<MessageModel> result = [];
+            
+            var messages = await _messagesRepository.GetAllAsync().ConfigureAwait(false);
+            var filteredMessages =  messages.Where(x => x.UserId == userId && x.ConversationId == conversationId)
+                .OrderBy(x => x.Timestamp).ToList();
+
+            foreach (var item in filteredMessages)
+            {
+                result.Add(new MessageModel()
+                {
+                    Answer = item.Answer,
+                    Question = item.Question,
+                    Timestamp = item.Timestamp
+                });
+            }
+            return result;
+        }
+
 
         public async Task<ConversationModel> CreateNewConversation(int userId)
         {
