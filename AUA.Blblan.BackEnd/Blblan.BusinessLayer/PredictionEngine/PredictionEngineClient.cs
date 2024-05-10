@@ -1,4 +1,5 @@
-﻿using Blblan.BusinessLayer.Requests;
+﻿using System.Net;
+using Blblan.BusinessLayer.Requests;
 using Blblan.Common.Models;
 using Newtonsoft.Json;
 using System.Text;
@@ -21,13 +22,13 @@ namespace PredictionClientApp
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
 
-        public async Task<string> MakePredictionAsync(QuestionModel model)
+        public async Task<(HttpStatusCode statusCode, string response)> MakePredictionAsync(QuestionModel model, int userId)
         {
             try
             {
                 var requestModel = new RequestBody
                 {
-                    userID = 1,
+                    userID = userId,
                     conversationID = model.contextId,
                     messageText = model.content
                 };
@@ -41,13 +42,16 @@ namespace PredictionClientApp
                 response.EnsureSuccessStatusCode();
 
                 // Read the response content
-                return await response.Content.ReadAsStringAsync();
+                var result = await response.Content.ReadAsStringAsync();
+                
+                return (response.StatusCode, result);
             }
             catch (HttpRequestException e)
             {
                 // Handle exceptions related to the request
                 Console.WriteLine($"Error making prediction: {e.Message}");
-                return null;
+
+                return new ValueTuple<HttpStatusCode, string>();
             }
         }
 

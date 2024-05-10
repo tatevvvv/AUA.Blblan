@@ -1,4 +1,5 @@
-﻿using Blblan.Common.Models;
+﻿using System.Net;
+using Blblan.Common.Models;
 using Blblan.Common.Services;
 using Blblan.Data.Entities;
 using Blblan.Data.Repositories;
@@ -29,7 +30,7 @@ namespace Blblan.BusinessLayer
         public async Task<AnswerModel> SendMessageAsync(int userId, QuestionModel messageModel)
         {
             var conversation = await _conversationRepository.GetByIdAsync(messageModel.contextId).ConfigureAwait(false);
-
+            
             if (conversation == null)
             {
                 throw new Exception($"Conversation not found error for Id : {messageModel.contextId}");
@@ -37,30 +38,27 @@ namespace Blblan.BusinessLayer
 
             try
             {
-                // collecting context by conversationID
-                var allMessages = _messagesRepository.Set().Where(m => m.ConversationId == conversation.Id).ToList();
-
-                var response = await _predictionEngineClient.MakePredictionAsync(messageModel).ConfigureAwait(false);
-                var result = new AnswerModel(response, messageModel.contextId);
-
-                // after getting the response from prediction engine store it in db.
-
-                if (result != null)
+                var result = await _predictionEngineClient.MakePredictionAsync(messageModel, userId).ConfigureAwait(false);
+                
+                var resultModel = new AnswerModel(result.response, messageModel.contextId);
+                
+                if (result.statusCode == HttpStatusCode.OK)
                 {
-                    conversation.Messages ??= new List<Message>();
-                    conversation.Messages.Add(new Message
+                    await _messagesRepository.AddAsync(new Message()
                     {
                         Question = messageModel.content,
-                        Answer = response,
+                        Answer = result.response,
                         ConversationId = messageModel.contextId,
-                        Conversation = conversation,
                         Timestamp = DateTime.UtcNow,
-                    });
-
-                    return result;
+                        Conversation = conversation
+                    }).ConfigureAwait(false);
+                    
+                    return resultModel;
                 }
-
-                return null;
+                else
+                {
+                    throw new Exception($"Warning on Status Code : {result.statusCode}");
+                }
             }
             catch (Exception e)
             {
