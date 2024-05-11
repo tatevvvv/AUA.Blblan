@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blblan.Common", "Blblan.Com
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blblan.BusinessLayer", "Blblan.BusinessLayer\Blblan.BusinessLayer.csproj", "{FC10CC83-5C5C-4409-A2C1-466A3AEAD7F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{08A675E4-2D29-4A25-86CF-9FBA9B906F5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{FC10CC83-5C5C-4409-A2C1-466A3AEAD7F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC10CC83-5C5C-4409-A2C1-466A3AEAD7F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC10CC83-5C5C-4409-A2C1-466A3AEAD7F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08A675E4-2D29-4A25-86CF-9FBA9B906F5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08A675E4-2D29-4A25-86CF-9FBA9B906F5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08A675E4-2D29-4A25-86CF-9FBA9B906F5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08A675E4-2D29-4A25-86CF-9FBA9B906F5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

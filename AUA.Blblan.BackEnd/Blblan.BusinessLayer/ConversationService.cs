@@ -8,7 +8,7 @@ using PredictionClientApp;
 
 namespace Blblan.BusinessLayer
 {
-    internal class ConversationService : IConversationService
+    public class ConversationService : IConversationService
     {
         private readonly PredictionEngineClient _predictionEngineClient;
         private readonly ConversationRepository _conversationRepository;
