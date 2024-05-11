@@ -7,6 +7,7 @@ export default function ButtonBase({
   size = "large",
   textColor,
   helperText = "some text",
+  ...rest
 }) {
   return (
     <Button
@@ -18,6 +19,7 @@ export default function ButtonBase({
           ? { backgroundColor, color: textColor || color, width: "100%" }
           : { color: textColor || color, width: "100%" }
       }
+      {...rest}
     >
       {children}
     </Button>

@@ -1,9 +1,52 @@
-import { TextField } from "@mui/material";
+import { TextField, FormHelperText, FormControl } from "@mui/material";
 import Button from "../components/atoms/Button";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { signUp } from "../api/auth/signUp"
+import { logIn } from "../api/auth/logIn"
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {
+  const navigate = useNavigate()
   const [alreadyHaveAccount, setAlreadyHaveAccount] = useState(false);
+  const requestLogIn = useMutation({ mutationFn: logIn, onSuccess: (data) => {
+    console.log(data)
+    localStorage.setItem('accessToken', data.token)
+    navigate('/')
+  } })
+  const requestSignUp = useMutation({ mutationFn: signUp, onSuccess: () => {
+    requestLogIn.mutate({ userName: formData.username, password: formData.password })
+  } })
+  const [formData, setFormData] = useState({
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: ""
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const authenticateOrRegister = useCallback(() => {
+    if (alreadyHaveAccount) {
+      requestLogIn.mutate(formData)
+    } else {
+      if (!formData.email || !formData.password || !formData.confirmPassword) {
+        return alert('One of the form fields is empty')
+      }
+
+      if (formData.confirmPassword !== formData.password) {
+        return alert('Password confirmation is wrong')
+      }
+
+      requestSignUp.mutate(formData)
+    }
+  }, [alreadyHaveAccount, formData, requestSignUp])
 
   const handleSetAlreadyHaveAccount = () => {
     setAlreadyHaveAccount(!alreadyHaveAccount);
@@ -23,18 +66,60 @@ export default function SignIn() {
           {!alreadyHaveAccount ? "Create an account" : "Welcome back"}
         </h1>
         <div className="login-container">
-          <TextField
-            style={{ width: "100%" }}
-            id="outlined-basic"
-            label="Outlined"
-            variant="outlined"
-          />
+          <FormControl error={requestSignUp.isError} variant="standard" fullWidth>
+            <TextField
+              style={{ width: "100%", marginBottom: '10px' }}
+              id="outlined-basic"
+              label="Username"
+              variant="outlined"
+              name="username"
+              type="text"
+              value={formData.username}
+              onChange={handleInputChange}
+            />
+            <TextField
+              style={{ width: "100%", marginBottom: '10px' }}
+              id="outlined-basic"
+              label="Email"
+              variant="outlined"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleInputChange}
+            />
+            <TextField
+              style={{ width: "100%", marginBottom: '10px' }}
+              id="outlined-basic"
+              label="Password"
+              variant="outlined"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+            />
+            {
+              !alreadyHaveAccount ?
+              <TextField
+                style={{ width: "100%" }}
+                id="outlined-basic"
+                label="Confirm Password"
+                variant="outlined"
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+              /> : null
+            }
+            <FormHelperText>{requestSignUp.error?.message}</FormHelperText>
+          </FormControl>
           <div
             style={{
               margin: "24px 0 0",
             }}
           >
-            <Button backgroundColor="#10a37f">Continue</Button>
+            <Button backgroundColor="#10a37f" onClick={authenticateOrRegister}>
+              {alreadyHaveAccount ? "Login" : "Sign up"}
+            </Button>
             <div className="already-have-account">
               <span className="text">
                 {!alreadyHaveAccount
@@ -48,11 +133,6 @@ export default function SignIn() {
                 {!alreadyHaveAccount ? "Login" : "Sign up"}
               </span>
             </div>
-            <div className="divider">
-              <span className="divider-line" />
-              <span className="divider-text">or</span>
-              <span className="divider-line" />
-            </div>
             <div
               className="sign-in-social"
               style={{
@@ -64,27 +144,6 @@ export default function SignIn() {
                 justifyContent: 'flex-start'
               }}
             >
-              <Button color="#000" backgroundColor="#fff">
-                <img
-                  src="	https://auth.openai.com/assets/google-logo-NePEveMl.svg"
-                  alt="ico"
-                />
-                <span>Continue with Google</span>
-              </Button>
-              <Button color="#000" backgroundColor="#fff">
-                <img
-                  src="	https://auth.openai.com/assets/microsoft-logo-BUXxQnXH.svg"
-                  alt="ico"
-                />
-                <span>Continue with Microsoft Account</span>
-              </Button>
-              <Button color="#000" backgroundColor="#fff">
-                <img
-                  src="https://auth.openai.com/assets/apple-logo-tAoxPOUx.svg"
-                  alt="ico"
-                />
-                <span>Continue with Apple</span>
-              </Button>
             </div>
           </div>
         </div>

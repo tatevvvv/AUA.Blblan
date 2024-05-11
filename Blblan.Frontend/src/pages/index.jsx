@@ -1,22 +1,26 @@
 import { useState } from "react";
-import ControlledInput from "../components/atoms/ControlledInput";
 import ChatSidebarItem from "../components/molecules/ChatSidebarItem";
+import ChatPage from "./ChatPage";
 import Sidebar from "../components/organisms/Sidebar";
 import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { getConversations } from "../api/conversations/getConversations"
+import { createNewConversation } from "../api/conversations/createNewConversation";
+import { apiQueryClient } from "../api/index"
+
 
 export default function Home() {
   const [inputValue, setInputValue] = useState("");
   const { data: conversations, isLoading }  = useQuery({ queryKey: ['conversations'], queryFn: () => getConversations(1) })
 
-  const handleChange = (event) => {
-    setInputValue(event.target.value);
-  };
+  const newConversation = useMutation({ mutationFn: () => createNewConversation(1),
+  onSuccess: (data) => {
+    apiQueryClient.setQueryData(['conversations'], (oldConversations) => ([...oldConversations, data]))
+  } })
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  console.log(conversations)
   return (
     <div className="chat-content">
       <Sidebar>
@@ -24,8 +28,9 @@ export default function Home() {
           iconLeft={
             <img
               style={{ width: "18.66px", height: "18.66px" }}
-              src="/icons/gpt.svg"
-            />
+              src="/icons/plus-svgrepo-com.svg"
+              onClick={() => newConversation.mutate()}
+              />
           }
           iconRight={
             <img
@@ -43,24 +48,7 @@ export default function Home() {
         />
         ))}
       </Sidebar>
-      <div className="content">
-        <div className="output"></div>
-        <div className="input-customized">
-          <div className="input-wrapper">
-            <i
-              className={`fa-solid fa-arrow-up-long arrow-send ${
-                !inputValue ? "disabled" : ""
-              }`}
-            />
-            <ControlledInput
-              value={inputValue}
-              changeHandler={handleChange}
-              placeholder="Message ChatGPT"
-              className={`chat-input`}
-            />
-          </div>
-        </div>
-      </div>
+      <ChatPage></ChatPage>
     </div>
   );
 }
