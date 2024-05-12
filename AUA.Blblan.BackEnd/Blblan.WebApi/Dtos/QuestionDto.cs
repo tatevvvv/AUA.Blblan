@@ -1,4 +1,4 @@
 ﻿namespace Blblan.Common.Models
 {
-    public record QuestionDto(string content, int contextId);
+    public record QuestionDto(string Message, int ContextId, byte ModelType);
 }

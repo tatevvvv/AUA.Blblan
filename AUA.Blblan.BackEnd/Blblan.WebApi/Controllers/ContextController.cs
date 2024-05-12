@@ -18,7 +18,7 @@ namespace Blblan.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> SendMessage(int userId, [FromBody] QuestionDto questionDto)
         {
-            var answer = await _contextService.SendMessageAsync(userId, new QuestionModel(questionDto.content, questionDto.contextId)).ConfigureAwait(false);
+            var answer = await _contextService.SendMessageAsync(userId, new QuestionModel(questionDto.Message, questionDto.ContextId, questionDto.ModelType)).ConfigureAwait(false);
 
             return Ok(answer);
         }
@@ -26,7 +26,7 @@ namespace Blblan.WebApi.Controllers
         [HttpGet]
         public async Task<List<MessageModel>> GetConversationAllMessagesByUserId(int userId, int conversationId)
         {
-            return await _contextService.GetAllConversationByUserId(userId, conversationId);
+            return await _contextService.GetAllConversationsByUserId(userId, conversationId);
         }
 
         [HttpPost]

@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Blblan.Common.Enums;
 using Blblan.Common.Models;
 using Blblan.Common.Services;
 using Blblan.Data.Entities;
@@ -29,26 +30,30 @@ namespace Blblan.BusinessLayer
 
         public async Task<AnswerModel> SendMessageAsync(int userId, QuestionModel messageModel)
         {
-            var conversation = await _conversationRepository.GetByIdAsync(messageModel.contextId).ConfigureAwait(false);
+            var conversation = await _conversationRepository.GetByIdAsync(messageModel.ContextId).ConfigureAwait(false);
             
             if (conversation == null)
             {
-                throw new Exception($"Conversation not found error for Id : {messageModel.contextId}");
+                throw new Exception($"Conversation not found error for Id : {messageModel.ContextId}");
             }
 
             try
             {
-                var result = await _predictionEngineClient.MakePredictionAsync(messageModel, userId).ConfigureAwait(false);
+                var result = messageModel.ModelType == (byte)ModelType.Llama
+                    ? await _predictionEngineClient.MakePredictionByLlamaAsync(messageModel, userId)
+                        .ConfigureAwait(false)
+                    : await _predictionEngineClient.MakePredictionByTinyLlamaAsync(messageModel, userId)
+                        .ConfigureAwait(false);
                 
-                var resultModel = new AnswerModel(result.response, messageModel.contextId);
+                var resultModel = new AnswerModel(result.response, messageModel.ContextId);
                 
                 if (result.statusCode == HttpStatusCode.OK)
                 {
                     await _messagesRepository.AddAsync(new Message()
                     {
-                        Question = messageModel.content,
+                        Question = messageModel.Message,
                         Answer = result.response,
-                        ConversationId = messageModel.contextId,
+                        ConversationId = messageModel.ContextId,
                         Timestamp = DateTime.UtcNow,
                         Conversation = conversation,
                         UserId = userId
@@ -63,11 +68,11 @@ namespace Blblan.BusinessLayer
             }
             catch (Exception e)
             {
-                return new AnswerModel(e.Message, messageModel.contextId);
+                return new AnswerModel(e.Message, messageModel.ContextId);
             }
         }
 
-        public async Task<List<MessageModel>> GetAllConversationByUserId(int userId, int conversationId)
+        public async Task<List<MessageModel>> GetAllConversationsByUserId(int userId, int conversationId)
         {
             List<MessageModel> result = [];
             

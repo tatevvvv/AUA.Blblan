@@ -35,8 +35,8 @@ namespace Blblan.BusinessLayer.Tests
         {
             // Arrange
             int userId = 1;
-            var messageModel = new QuestionModel("", 123);
-            _conversationRepository.GetByIdAsync(messageModel.contextId).Returns(Task.FromResult<Conversation>(null));
+            var messageModel = new QuestionModel("", 123, 1);
+            _conversationRepository.GetByIdAsync(messageModel.ContextId).Returns(Task.FromResult<Conversation>(null));
 
             // Act & Assert
             Assert.ThrowsAsync<Exception>(async () => await _conversationService.SendMessageAsync(userId, messageModel));
@@ -46,10 +46,9 @@ namespace Blblan.BusinessLayer.Tests
         public async Task SendMessageAsync_Successful_ReturnsAnswerModel()
         {
             // Arrange
-            int userId = 1;
-            var messageModel = new QuestionModel("", 123);
+            var messageModel = new QuestionModel("", 123, 2);
             var conversation = new Conversation();
-            _conversationRepository.GetByIdAsync(messageModel.contextId).Returns(Task.FromResult(conversation));
+            _conversationRepository.GetByIdAsync(messageModel.ContextId).Returns(Task.FromResult(conversation));
             await _messagesRepository.Received().AddAsync(Arg.Any<Message>()).ConfigureAwait(false);
         }
     }

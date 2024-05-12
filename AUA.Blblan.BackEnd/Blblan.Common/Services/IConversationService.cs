@@ -6,7 +6,7 @@ namespace Blblan.Common.Services
     {
         Task<AnswerModel> SendMessageAsync(int userId, QuestionModel messageModel);
 
-        Task<List<MessageModel>> GetAllConversationByUserId(int userId, int conversationId);
+        Task<List<MessageModel>> GetAllConversationsByUserId(int userId, int conversationId);
 
         Task<ConversationModel> CreateNewConversation(int userId);
 
