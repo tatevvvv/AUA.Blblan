@@ -19,7 +19,7 @@ public class TokenService
         _options = options.Value;
     }
 
-    public string CreateToken(UserModel user)
+    public string CreateToken(UserResponse user)
     {
         var expiration = DateTime.UtcNow.AddMinutes(ExpirationMinutes);
         var token = CreateJwtToken(
@@ -44,7 +44,7 @@ public class TokenService
             signingCredentials: credentials
         );
 
-    private List<Claim> CreateClaims(UserModel user)
+    private List<Claim> CreateClaims(UserResponse user)
     {
         var jwtSub = _options.JwtRegisteredClaimNamesSub;
 
@@ -56,9 +56,8 @@ public class TokenService
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                // new Claim(ClaimTypes.Name, user.UserName),
-                // new Claim(ClaimTypes.Role, user.Role.ToString())
+                new Claim(ClaimTypes.Name, user.UserName),
+                 //new Claim(ClaimTypes.Email, user.Email),
             };
 
             return claims;

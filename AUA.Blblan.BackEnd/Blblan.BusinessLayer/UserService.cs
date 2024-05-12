@@ -14,33 +14,31 @@ namespace Blblan.BusinessLayer
             _userManager = userManager;
         }
 
-        public async Task<UserModel> AuthenticateAsync(LoginModel loginModel)
+        public async Task<UserResponse> AuthenticateAsync(LoginModel loginModel)
         {
             var user = await _userManager.FindByNameAsync(loginModel.UserName);
             if (user == null)
             {
-                // User not found, return null or throw an exception
                 throw new InvalidOperationException("User not found");
             }
 
             var isPasswordValid = await _userManager.CheckPasswordAsync(user, loginModel.Password);
             if (!isPasswordValid)
             {
-                // Incorrect password, return null or throw an exception
                 throw new InvalidOperationException("Incorrect Password");
             }
 
-            var userRes = new UserModel
+            var userRes = new UserResponse()
             {
                 Id = user.Id,
-                Email = user.Email
+                UserName = user.UserName
             };
 
 
             return userRes;
         }
 
-        public async Task<UserModel> RegisterAsync(SignUpModel signUpModel)
+        public async Task<UserResponse> RegisterAsync(SignUpModel signUpModel)
         {
             var existingUser = await _userManager.FindByEmailAsync(signUpModel.Email);
 
@@ -64,10 +62,10 @@ namespace Blblan.BusinessLayer
                 throw new InvalidOperationException("Failed to register user");
             }
 
-            var userRes = new UserModel
+            var userRes = new UserResponse()
             {
                 Id = newUser.Id,
-                Email = newUser.Email
+                UserName = newUser.UserName
             };
 
             return userRes;

@@ -22,7 +22,7 @@ namespace Blblan.WebApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            UserModel? user = null;
+            UserResponse? user = null;
             try
             {
                 user = await _userService.AuthenticateAsync(model);
@@ -37,6 +37,7 @@ namespace Blblan.WebApi.Controllers
             return Ok(new UserResponse
             {
                 Id = user.Id,
+                UserName = user.UserName,
                 Token = accessToken
             });
         }
@@ -44,7 +45,7 @@ namespace Blblan.WebApi.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(SignUpModel model)
         {
-            UserModel user;
+            UserResponse user;
 
             try
             {
