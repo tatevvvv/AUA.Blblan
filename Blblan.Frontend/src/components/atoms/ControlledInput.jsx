@@ -1,4 +1,4 @@
-export default function ControlledInput({ placeholder, className='controlled-input', value, changeHandler }) {
+export default function ControlledInput({ placeholder, className='controlled-input', value, changeHandler, ...rest }) {
   return (
     <input
       type="text"
@@ -6,6 +6,7 @@ export default function ControlledInput({ placeholder, className='controlled-inp
       onChange={changeHandler}
       className={className}
       placeholder={placeholder}
+      {...rest}
     />
   );
 }

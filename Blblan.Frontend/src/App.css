@@ -125,11 +125,6 @@ a:active {
   text-transform: uppercase;
 }
 
-.sidebar {
-  width: 244px;
-  background-color: #171717;
-}
-
 .chat-content {
   height: 100vh;
   display: flex;
@@ -142,10 +137,15 @@ a:active {
 }
 
 .sidebar {
+  width: 244px;
+  background-color: #171717;
   padding-top: 0.875rem;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
   padding-bottom: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .sidebar-item {
@@ -160,20 +160,32 @@ a:active {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   justify-content: space-between;
+  margin-bottom: 0.5rem;
+  text-wrap: nowrap;
+}
+
+.sidebar-item-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .output {
-  height: calc(100% - 80px);
+  height: calc(100% - 80px - 2rem);
+  padding: 1rem 2rem;
+  overflow-y: scroll;
 }
 
 .input-customized {
   width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .chat-input {
   height: 52px;
-  overflow-y: hidden;
   width: 100%;
+  overflow-y: hidden;
   max-width: 48rem;
   margin: auto;
   color: #fff;
@@ -190,7 +202,8 @@ a:active {
 }
 
 div.input-wrapper {
-  margin: auto;
+  margin-right: 2rem;
+  width: 100%;
   max-width: 48rem;
   position: relative;
 }
@@ -224,4 +237,18 @@ div.input-wrapper {
 
 .sidebar-item:hover {
   background-color: #212121;
+}
+
+.message {
+  color: white
+}
+
+.user-message {
+  text-align: right;
+  margin: 10px 0px;
+}
+
+.bot-message {
+  text-align: left;
+  margin: 10px 0px;
 }

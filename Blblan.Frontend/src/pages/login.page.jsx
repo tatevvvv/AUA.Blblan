@@ -16,8 +16,9 @@ const loginSchema = yup.object({
 export default function Login() {
   const navigate = useNavigate()
   const requestLogIn = useMutation({
-    mutationFn: logIn, onSuccess: (data) => {
-      localStorage.setItem('accessToken', data.token)
+    mutationFn: logIn, onSuccess: ({ token, ...rest }) => {
+      localStorage.setItem('accessToken', token)
+      localStorage.setItem('user', JSON.stringify(rest))
       navigate('/')
     }
   })

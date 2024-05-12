@@ -7,16 +7,24 @@ import { useMutation } from "@tanstack/react-query";
 import { getConversations } from "../api/conversations/getConversations"
 import { createNewConversation } from "../api/conversations/createNewConversation";
 import { apiQueryClient } from "../api/index"
+import { useNavigate } from "react-router-dom";
 
+const user = JSON.parse(localStorage.getItem('user'))
 
 export default function Home() {
-  const { data: conversations, isLoading }  = useQuery({ queryKey: ['conversations'], queryFn: () => getConversations(1) })
+  const navigate = useNavigate()
   const [selectedConversationId, setSelectedConversation] = useState();
-
-  const newConversation = useMutation({ mutationFn: () => createNewConversation(1),
+  const { data: conversations, isLoading }  = useQuery({ queryKey: ['conversations', user.id], queryFn: () => getConversations(user.id) })
+  
+  const newConversation = useMutation({ mutationFn: () => createNewConversation(user.id),
   onSuccess: (data) => {
-    apiQueryClient.setQueryData(['conversations'], (oldConversations) => ([...oldConversations, data]))
+    apiQueryClient.setQueryData(['conversations', user.id], (oldConversations) => ([...oldConversations, data]))
   } })
+
+  const logOut = () => {
+    localStorage.removeItem('accessToken')
+    navigate('/login')
+  }
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -24,31 +32,48 @@ export default function Home() {
   return (
     <div className="chat-content">
       <Sidebar>
-        <ChatSidebarItem
-          iconLeft={
-            <img
-              style={{ width: "18.66px", height: "18.66px" }}
-              src="/icons/plus-svgrepo-com.svg"
-              onClick={() => newConversation.mutate()}
+        <div>
+          <ChatSidebarItem
+            text="New chat"
+            iconLeft={
+              <img
+                alt="plus-icon"
+                style={{ width: "18.66px", height: "18.66px" }}
+                src="/icons/plus-svgrepo-com.svg"
+                onClick={() => newConversation.mutate()}
+                />
+            }
+            iconRight={
+              <img
+                alt="new-page-icon"
+                src="/icons/pen-note.svg"
+                style={{ width: "18.66px", height: "18.66px" }}
               />
-          }
-          iconRight={
-            <img
-              src="/icons/pen-note.svg"
-              style={{ width: "18.66px", height: "18.66px" }}
+            }
+          />
+          {conversations && conversations.map(item => (
+            <ChatSidebarItem
+              key={item.id}
+              text={item.name}
+              onClick={() => { setSelectedConversation(item.id) }}
             />
-          }
-          text="New chat"
-        />
-        {conversations && conversations.map(item => (
-        <ChatSidebarItem
-          key={item.id}
-          text={item.name}
-          onClick={() => {setSelectedConversation(item.id); console.log(selectedConversationId)}}
-        />
-        ))}
+          ))}
+        </div>
+        <div>
+          <ChatSidebarItem
+            text={`Log out: ${JSON.parse(localStorage.getItem('user')).userName}`}
+            onClick={logOut}
+            iconLeft={
+              <img
+                alt="logout-icon"
+                src="/icons/logout-svgrepo-com.svg"
+                style={{ width: "18.66px", height: "18.66px" }}
+              />
+            }
+          />
+        </div>
       </Sidebar>
-      <ChatPage createConversation={createNewConversation} conversationId={selectedConversationId}></ChatPage>
+      <ChatPage conversationId={selectedConversationId} setSelectedConversation={setSelectedConversation}/>
     </div>
   );
 }
