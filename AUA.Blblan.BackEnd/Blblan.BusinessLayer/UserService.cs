@@ -53,15 +53,20 @@ namespace Blblan.BusinessLayer
                 FullName = signUpModel.UserName,
                 Email = signUpModel.Email,
             };
-
-            var result = await _userManager.CreateAsync(newUser, signUpModel.Password);
-
-            if (!result.Succeeded)
+            
+            try
             {
-                // Handle errors occurred during user creation
-                throw new InvalidOperationException("Failed to register user");
+                var result = await _userManager.CreateAsync(newUser, signUpModel.Password);
+                if (!result.Succeeded)
+                {
+                    throw new InvalidOperationException();
+                }
             }
-
+            catch
+            {
+                throw new Exception("Failed to register user");
+            }
+            
             var userRes = new UserResponse()
             {
                 Id = newUser.Id,

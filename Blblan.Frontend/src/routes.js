@@ -1,11 +1,16 @@
-import Home from "./pages";
-import SignIn from "./pages/sign-in";
+import Home from "./pages/home.page";
+import Login from "./pages/login.page";
+import SignUp from "./pages/sign-up.page";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
   {
-    path: "/sign-in",
-    element: <SignIn />,
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: '/sign-up',
+    element: <SignUp />
   },
   {
     path: "/",

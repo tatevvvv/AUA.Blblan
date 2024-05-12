@@ -137,3 +137,5 @@ Directory.Build.targets
 
 # Workspace state for Visual Studio
 VSWorkspaceState.json
+
+.DS_Store

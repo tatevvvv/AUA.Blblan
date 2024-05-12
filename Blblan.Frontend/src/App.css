@@ -13,6 +13,22 @@
   }
 }
 
+a:link { 
+  text-decoration: none; 
+} 
+
+a:visited { 
+  text-decoration: none; 
+} 
+
+a:hover { 
+  text-decoration: none; 
+} 
+
+a:active { 
+  text-decoration: none; 
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -45,7 +61,7 @@
   background-color: #fff;
 }
 
-.sign-in .logo {
+.auth .logo {
   display: flex;
   height: 64px;
   width: 64px;
@@ -59,7 +75,7 @@
   margin: auto;
 }
 
-.sign-in.title {
+.auth.title {
   font-size: 32px;
   font: "Söhne";
   margin: 24px 0 0;
@@ -68,7 +84,7 @@
   text-align: center;
 }
 
-.login-container {
+.auth-container {
   background-color: #fff;
   padding: 0 40px 40px;
   border-radius: 3px;
@@ -88,6 +104,7 @@
 .already-have-account .login-text {
   color: #10a37f;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .divider {
@@ -106,22 +123,6 @@
 
 .divider-text {
   text-transform: uppercase;
-}
-
-.sign-in-social span {
-  font-size: 13px;
-  font-weight: 400;
-}
-
-.sign-in-social button {
-  gap: 5px;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.sign-in-social img {
-  width: 20px;
-  height: 20px;
 }
 
 .sidebar {
