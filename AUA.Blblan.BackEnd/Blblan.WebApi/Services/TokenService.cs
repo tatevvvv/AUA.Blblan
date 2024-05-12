@@ -80,4 +80,31 @@ public class TokenService
             SecurityAlgorithms.HmacSha256
         );
     }
+
+    public int? GetSenderIdFromToken(string token)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        try
+        {
+            var claimsPrincipal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = false,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                SignatureValidator = (string token, TokenValidationParameters parameters) => new JwtSecurityToken(token)
+            }, out _);
+
+            var senderIdClaim = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier); 
+            if (senderIdClaim != null && int.TryParse(senderIdClaim.Value, out var senderId))
+            {
+                return senderId;
+            }
+        }
+        catch (Exception)
+        {
+            // Token parsing failed or sender ID extraction failed
+        }
+
+        return null;
+    }
 }

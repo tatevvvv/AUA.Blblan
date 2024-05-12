@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using Blblan.BusinessLayer;
 using Blblan.Common.Models;
 using Blblan.Common.Services;
@@ -91,6 +92,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 app.UseAuthorization();
 
 app.MapControllers();
