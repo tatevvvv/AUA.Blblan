@@ -43,7 +43,7 @@ export default function SignUp() {
       <div className="oai-header">
         <img
           className="logo"
-          src="https://auth.openai.com/assets/openai-logo-DmWoKcI3.svg"
+          src="/icons/aua-logo.jpg"
           alt="ico"
         />
       </div>

@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blblan.WebApi.Controllers
 {
-    [Authorize]
-    [JwtAuthorization]
+    // [Authorize]
+    // [JwtAuthorization]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ContextController : ControllerBase
@@ -33,10 +33,9 @@ namespace Blblan.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CrateNewConversation()
+        public async Task<IActionResult> CrateNewConversation(int userId)
         {
-            var senderId = (int)HttpContext.Items["senderId"];
-            var result = await _contextService.CreateNewConversation(senderId);
+            var result = await _contextService.CreateNewConversation(userId);
 
             return Ok(result);
         }
