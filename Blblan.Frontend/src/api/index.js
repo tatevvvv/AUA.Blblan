@@ -10,7 +10,7 @@ export const apiClient = axios.create({
     timeout: 5000,
     headers: {
         common: {
-            Authorization: `Beaerer ${localStorage.getItem('accessToken')}`
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
     }
 })
