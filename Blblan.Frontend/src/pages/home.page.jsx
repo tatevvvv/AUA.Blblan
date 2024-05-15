@@ -4,31 +4,39 @@ import ChatPage from "./chat.page";
 import Sidebar from "../components/organisms/Sidebar";
 import { useQuery } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
-import { getConversations } from "../api/conversations/getConversations"
+import { getConversations } from "../api/conversations/getConversations";
 import { createNewConversation } from "../api/conversations/createNewConversation";
-import { apiQueryClient } from "../api/index"
+import { apiQueryClient } from "../api/index";
 import { useNavigate } from "react-router-dom";
 
-const user = JSON.parse(localStorage.getItem('user'))
-
 export default function Home() {
-  const navigate = useNavigate()
+  const user = JSON.parse(localStorage.getItem('user'));
+  const navigate = useNavigate();
   const [selectedConversationId, setSelectedConversation] = useState();
-  const { data: conversations, isLoading }  = useQuery({ queryKey: ['conversations', user.id], queryFn: () => getConversations(user.id) })
-  
-  const newConversation = useMutation({ mutationFn: () => createNewConversation(user.id),
-  onSuccess: (data) => {
-    apiQueryClient.setQueryData(['conversations', user.id], (oldConversations) => ([...oldConversations, data]))
-  } })
+  const { data: conversations, isLoading } = useQuery({
+    queryKey: ['conversations', user.id],
+    queryFn: () => getConversations(user.id),
+  });
+
+  const newConversation = useMutation({
+    mutationFn: () => createNewConversation(user.id),
+    onSuccess: (data) => {
+      apiQueryClient.setQueryData(['conversations', user.id], (oldConversations) => [
+        ...oldConversations, data,
+      ]);
+      setSelectedConversation(data.id)
+    },
+  });
 
   const logOut = () => {
-    localStorage.removeItem('accessToken')
-    navigate('/login')
-  }
+    localStorage.removeItem('accessToken');
+    navigate('/login');
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
   return (
     <div className="chat-content">
       <Sidebar>
@@ -41,7 +49,7 @@ export default function Home() {
                 style={{ width: "18.66px", height: "18.66px" }}
                 src="/icons/plus-svgrepo-com.svg"
                 onClick={() => newConversation.mutate()}
-                />
+              />
             }
             iconRight={
               <img
@@ -55,7 +63,8 @@ export default function Home() {
             <ChatSidebarItem
               key={item.id}
               text={item.name}
-              onClick={() => { setSelectedConversation(item.id) }}
+              isSelected={item.id === selectedConversationId}
+              onClick={() => { setSelectedConversation(item.id); }}
             />
           ))}
         </div>
@@ -73,7 +82,7 @@ export default function Home() {
           />
         </div>
       </Sidebar>
-      <ChatPage conversationId={selectedConversationId} setSelectedConversation={setSelectedConversation}/>
+      <ChatPage conversationId={selectedConversationId} setSelectedConversation={setSelectedConversation} />
     </div>
   );
 }
